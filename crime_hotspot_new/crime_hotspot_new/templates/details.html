@@ -1,0 +1,32 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+   <link rel="icon" type="image/png" sizes="16x16" href="../static/assets/images/favicon.png">
+    <title>Crime Hotspot</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="../static/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../static/css/style.css" rel="stylesheet">
+    <!-- You can change the theme colors from here -->
+    <link href="../static/css/colors/blue.css" id="theme" rel="stylesheet">
+</head>
+
+<body>
+<h5 style="color:#009900">Safest Route</h5>
+<img src="../static/assets/images/safe.png" width="80" height="80">
+<p>&nbsp;</p>
+{% if st=="1" %}
+
+<h5 style="color:#FF0000">Hotspot Route</h5>
+<img src="../static/assets/images/unsafe.png" width="80" height="80">
+{% for rr in data %}
+<p>{{loop.index}}. {{rr}}</p>
+
+{% endfor %}
+
+{% endif %}
+
+
+</body>
+</html>

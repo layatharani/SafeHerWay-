@@ -1,0 +1,363 @@
+
+
+
+<html>
+  <head>
+    <title>Directions Service</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+	<style>
+	/* 
+ * Always set the map height explicitly to define the size of the div element
+ * that contains the map. 
+ */
+#map {
+  height: 100%;
+}
+
+/* 
+ * Optional: Makes the sample page fill the window. 
+ */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#floating-panel {
+  position: absolute;
+  top: 10px;
+  left: 25%;
+  z-index: 5;
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #999;
+  text-align: center;
+  font-family: "Roboto", "sans-serif";
+  line-height: 30px;
+  padding-left: 10px;
+}
+	</style>
+  </head>
+  
+  <body>
+   <div id="floating-panel">
+        <b>Start: </b>
+        <input type="text" id="start" placeholder="Enter start location">
+        <b>End: </b>
+        <input type="text" id="end" placeholder="Enter end location">
+    </div>
+    <div id="map"></div>
+
+    <!-- 
+      The `defer` attribute causes the callback to execute after the full HTML
+      document has been parsed. For non-blocking uses, avoiding race conditions,
+      and consistent behavior across browsers, consider loading using Promises.
+      See https://developers.google.com/maps/documentation/javascript/load-maps-js-api
+      for more information.
+      -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
+      defer
+    ></script>
+	
+   <script>
+        let map;
+        let directionsService;
+        let directionsRenderer;
+        let trackingInterval;
+        let userMarker;
+
+        function initMap() {
+            directionsService = new google.maps.DirectionsService();
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 10,
+                center: { lat: 10.790483, lng: 78.704673 },
+            });
+
+            directionsRenderer = new google.maps.DirectionsRenderer({
+                map: map,
+            });
+
+            const onChangeHandler = function () {
+                calculateAndDisplayRoute();
+            };
+			
+			
+
+            document.getElementById("start").addEventListener("change", onChangeHandler);
+            document.getElementById("end").addEventListener("change", onChangeHandler);
+			
+			var locations = [
+		
+			  ['chennai', 10.831760000000001, 78.69317000000001, 4],
+			  ['chennai', 10.83197, 78.6931, 4],
+			  ['chennai', 10.832080000000001, 78.69304000000001, 4],
+			  
+			  /*['Coogee Beach', -33.923036, 151.259052, 5],
+			  ['Cronulla Beach', -34.028249, 151.157507, 3],
+			  ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
+			  ['Maroubra Beach', -33.950198, 151.259302, 1]*/
+			];
+			////////////////////////
+		var infowindow = new google.maps.InfoWindow();
+		
+			var marker, i;
+		
+			for (i = 0; i < locations.length; i++) { 
+			  marker = new google.maps.Marker({
+				position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+				map: map
+			  });
+		//marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+			  google.maps.event.addListener(marker, 'click', (function(marker, i) {
+				return function() {
+				  infowindow.setContent(locations[i][0]);
+				  infowindow.open(map, marker);
+				}
+			  })(marker, i));
+			}
+			////////
+			 for (i = 0; i < locations2.length; i++) { 
+			  marker = new google.maps.Marker({
+				position: new google.maps.LatLng(locations2[i][1], locations2[i][2]),
+				map: map
+			  });
+		marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+			  google.maps.event.addListener(marker, 'click', (function(marker, i) {
+				return function() {
+				  infowindow.setContent(locations2[i][0]);
+				  infowindow.open(map, marker);
+				}
+			  })(marker, i));
+			}
+			
+		////////////////////
+        }
+		
+	////////////////////////	
+	
+	
+	////////////////////////////////////////////////////
+	
+
+        function calculateAndDisplayRoute() {
+            const start = document.getElementById("t1").value;
+            const end = document.getElementById("t2").value;
+
+            directionsService.route(
+                {
+                    origin: start,
+                    destination: end,
+                    travelMode: google.maps.TravelMode.DRIVING,
+                    provideRouteAlternatives: true, // Request multiple possible paths
+                },
+                function (response, status) {
+                    if (status === "OK") {
+                        let shortestDistance = Infinity;
+                        let shortestRouteIndex = -1;
+
+                        // Clear previous routes
+                        map.data.forEach(function (feature) {
+                            map.data.remove(feature);
+                        });
+
+                        // Display each route
+                        response.routes.forEach(function (route, index) {
+                            const renderer = new google.maps.DirectionsRenderer({
+                                map: map,
+                                directions: response,
+                                routeIndex: index,
+                                polylineOptions: {
+									strokeWeight: 5,
+                                    strokeColor:
+                                        index === shortestRouteIndex
+                                            ? "green" // Assign green color to the shortest route
+                                            : getRandomColor(), // Assign a random color to other routes
+                                },
+                            });
+
+
+                            // Calculate distance for current route
+                            const distance = route.legs[0].distance.value;
+
+                            // Check if current route is shorter than the shortest recorded route
+                            if (distance < shortestDistance) {
+                                shortestDistance = distance;
+                                shortestRouteIndex = index;
+                            }
+                        });
+
+                        // Display the shortest route
+                        if (shortestRouteIndex !== -1) {
+                            const shortestRoute = response.routes[shortestRouteIndex];
+                            const distance = shortestRoute.legs[0].distance.text;
+                            const routeSteps = shortestRoute.legs[0].steps;
+                            const routeLength = routeSteps.length;
+
+                            // Calculate the total length of the route
+                            let totalDistance = 0;
+                            routeSteps.forEach(step => {
+                                totalDistance += step.distance.value;
+                            });
+
+                            // Calculate the point at 50% of the total route length
+                            let distanceSoFar = 0;
+                            let midwayStepIndex = 0;
+                            for (let i = 0; i < routeLength; i++) {
+                                const stepDistance = routeSteps[i].distance.value;
+                                if (distanceSoFar + stepDistance >= totalDistance / 2) {
+                                    midwayStepIndex = i;
+                                    break;
+                                }
+                                distanceSoFar += stepDistance;
+                            }
+
+                            const midwayStep = routeSteps[midwayStepIndex];
+                            const midwayLocation = midwayStep.end_location;
+
+                            // Offset the position of the InfoWindow from the midway point
+                            const offset = 0.0050; // Adjust this value as needed
+                            const offsetLocation = {
+                                lat: midwayLocation.lat() + offset,
+                                lng: midwayLocation.lng() + offset,
+                            };
+
+                            // Create and display the InfoWindow near the midway point
+                            const infoWindow = new google.maps.InfoWindow({
+                                content: `
+                                    <div>
+                                        Shortest Route - Distance: ${distance}
+                                        <button id="startJourneyBtn">Start Journey</button>
+                                    </div>
+                                `,
+                            });
+                            infoWindow.setPosition(offsetLocation);
+                            infoWindow.open(map);
+
+                            // Add event listener to the "Start Journey" button
+                            //document.getElementById("startJourneyBtn").addEventListener("click", function () {
+                              //  startJourney(shortestRoute);
+                            });
+                        }
+                    } else {
+                        window.alert("Directions request failed due to " + status);
+                    }
+                }
+            );
+        }
+
+        function startJourney(route) {
+            // Prompt user for location access
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
+
+                    // Set user marker at current location
+                    userMarker = new google.maps.Marker({
+                        position: userLocation,
+                        map: map,
+                        icon: {
+                            url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                        },
+                    });
+
+                    // Move map view to user's location
+                    map.setCenter(userLocation);
+
+                    // Start tracking the journey
+                    const path = route.overview_path;
+                    let index = 0;
+                    trackingInterval = setInterval(function () {
+                        const location = path[index];
+                        userMarker.setPosition(location);
+                        index++;
+                        if (index >= path.length) {
+                            clearInterval(trackingInterval);
+                            alert("Journey Complete");
+                        }
+                    }, 1000); // Update marker position every second
+                }, function () {
+                    window.alert("Please allow location access to start the journey.");
+                });
+            } else {
+                window.alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Function to generate random color
+        function getRandomColor() {
+            const letters = "0123456789ABCDEF";
+            let color = "#";
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    </script>
+	<!-- TypeScript code -->
+    <script type="module">
+        function initMap(): void {
+  const directionsService = new google.maps.DirectionsService();
+  const directionsRenderer = new google.maps.DirectionsRenderer();
+  var map = new google.maps.Map(
+    document.getElementById("map") as HTMLElement,
+    {
+      zoom: 10,
+      center: { lat: 10.790483, lng: 78.704673 },
+	  
+    }
+  );
+  
+ 
+  	
+  directionsRenderer.setMap(map);
+
+  const onChangeHandler = function () {
+    calculateAndDisplayRoute(directionsService, directionsRenderer);
+  };
+
+  (document.getElementById("start") as HTMLElement).addEventListener(
+    "change",
+    onChangeHandler
+  );
+  (document.getElementById("end") as HTMLElement).addEventListener(
+    "change",
+    onChangeHandler
+  );
+}
+
+function calculateAndDisplayRoute(
+  directionsService: google.maps.DirectionsService,
+  directionsRenderer: google.maps.DirectionsRenderer
+) {
+  directionsService
+    .route({
+      origin: {
+        query: (document.getElementById("start") as HTMLInputElement).value,
+      },
+      destination: {
+        query: (document.getElementById("end") as HTMLInputElement).value,
+      },
+      travelMode: google.maps.TravelMode.DRIVING,
+	  provideRouteAlternatives: true,
+    })
+    .then((response) => {
+      directionsRenderer.setDirections(response);
+    })
+    .catch((e) => window.alert("Directions request failed due to " + status));
+}
+
+declare global {
+  interface Window {
+    initMap: () => void;
+  }
+}
+window.initMap = initMap;
+    </script>
+
+  </body>
+</html>

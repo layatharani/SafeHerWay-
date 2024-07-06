@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+	 <link rel="icon" type="image/png" sizes="16x16" href="../static/assets/images/favicon.png">
+    <title>Crime Hotspot</title>
+    <link href="../static/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/style.css" rel="stylesheet">
+    <link href="../static/css/colors/blue.css" id="theme" rel="stylesheet">
+	
+	
+</head>
+<body>
+   <div id="main-wrapper">
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-toggleable-sm navbar-light">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="">
+                        <!-- Logo icon --><b>
+							<span style="color:#FFFFFF">Crime Hotspot</span>
+                
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text --><span>
+                         
+                         <!-- Light Logo text -->    
+                        </span> </a>                </div>
+
+                <div class="navbar-collapse">
+
+                    <ul class="navbar-nav mr-auto mt-md-0">
+                        <!-- This is  -->
+                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="mdi mdi-menu"></i></a> </li>
+
+                        <li class="nav-item hidden-sm-down search-box"> <a class="nav-link hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="ti-search"></i></a>
+                            <form class="app-search">
+                                <input type="text" class="form-control" placeholder="Search & enter"> <a class="srh-btn"><i class="ti-close"></i></a> </form>
+                        </li>
+                    </ul>
+                  
+                    <ul class="navbar-nav my-lg-0">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../static/assets/images/profile.jpg" alt="user" class="profile-pic m-r-10" />User</a>                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+       
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li> <a class="waves-effect waves-dark" href="http://localhost:5000/view_map" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Hotspot Location</span></a>                        </li>
+                        
+                        <li> <a class="waves-effect waves-dark" href="http://localhost:5000/view_route" aria-expanded="false"><i class="mdi mdi-table"></i><span class="hide-menu">Safest Route</span></a>                        </li>
+                        <li> <a class="waves-effect waves-dark" href="http://localhost:5000/logout" aria-expanded="false"><i class="mdi mdi-emoticon"></i><span class="hide-menu">Logout</span></a> </li>
+                        
+                    </ul>
+                   
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+            <!-- Bottom points-->
+           
+            <!-- End Bottom points-->
+        </aside>
+        
+        <div class="page-wrapper">
+            <div class="container-fluid">
+                <div class="row page-titles">
+                    <div class="col-md-5 col-8 align-self-center">
+                        <h3 class="text-themecolor m-b-0 m-t-0">Safest Route Prediction</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="http://localhost:5000/view_map">Home</a></li>
+                            
+                        </ol>
+                    </div>
+                   
+                </div>
+			
+  <div class="row">
+                    <!-- Column -->
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-block">
+<div class="row">
+	<div class="col-md-8">
+		<div id="map"></div>
+	</div>
+	<div class="col-md-4">
+	<iframe src="http://localhost:5000/details" width="300" height="500" frameborder="0"></iframe>
+	</div>
+</div>
+
+
+
+</div>
+</div>
+</div>
+</div>
+
+
+    <script>
+        function initMap() {
+		
+		
+	
+            // Create a map object and specify the DOM element for display.
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 10.79243358, lng: 78.64810}, // default to San Francisco
+                zoom: 12
+            });

@@ -1,0 +1,18 @@
+1==>
+Edit your file path (Project folder saved location) in Bat File (myfile.bat)-->right click to edit
+
+START chrome file:///F:/project/crime_hotspot_new/templates/myroute1.html
+
+2==>
+Edit your file path (Project folder saved location) in Bat File (myfile2.bat)-->right click to edit
+
+START chrome file:///F:/project/crime_hotspot_new/templates/mydirection.html
+
+
+3==>
+Edit your file path (Project folder saved location) in Bat File (myfile3.bat)-->right click to edit
+
+START chrome file:///F:/project/crime_hotspot_new/templates/mydirection.html
+
+4=>
+folder "crimehot" copy and save to c:/wamp/www

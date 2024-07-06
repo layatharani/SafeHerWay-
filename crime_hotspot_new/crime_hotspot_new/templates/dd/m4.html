@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Get Route Coordinates</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&libraries=geometry"></script>
+    <script>
+        // Function to get all coordinates between source and destination
+        function getRouteCoordinates(source, destination, callback) {
+            var directionsService = new google.maps.DirectionsService();
+
+            // Request for directions
+            directionsService.route({
+                origin: source,
+                destination: destination,
+                travelMode: 'DRIVING'
+            }, function(response, status) {
+                if (status === 'OK') {
+                    var route = response.routes[0].overview_polyline;
+                    var coordinates = google.maps.geometry.encoding.decodePath(route);
+
+                    // Callback function with coordinates
+                    callback(coordinates);
+                } else {
+                    console.log('Error fetching directions:', status);
+                    callback([]);
+                }
+            });
+        }
+
+        // Example usage
+        var source = 'Golden Rock, Tiruchirappalli';
+        var destination = 'Teppakulam, Tiruchirappalli';
+
+        getRouteCoordinates(source, destination, function(coordinates) {
+            // Process coordinates as needed
+            console.log('Coordinates along the route:');
+            coordinates.forEach(function(coordinate) {
+                console.log(coordinate.lat(), coordinate.lng());
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Check the console for the coordinates along the route</h1>
+</body>
+</html>

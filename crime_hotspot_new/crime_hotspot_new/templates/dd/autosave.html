@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Get Route Coordinates</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&libraries=geometry"></script>
+    <script>
+        // Function to get all coordinates between source and destination
+        function getRouteCoordinates(source, destination, callback) {
+            var directionsService = new google.maps.DirectionsService();
+
+            // Request for directions
+            directionsService.route({
+                origin: source,
+                destination: destination,
+                travelMode: 'DRIVING'
+            }, function(response, status) {
+                if (status === 'OK') {
+                    var route = response.routes[0].overview_polyline;
+                    var coordinates = google.maps.geometry.encoding.decodePath(route);
+
+                    // Callback function with coordinates
+                    callback(coordinates);
+                } else {
+                    console.log('Error fetching directions:', status);
+                    callback([]);
+                }
+            });
+        }
+
+        // Function to save coordinates to a text file
+        function saveToFile(coordinates) {
+            var content = "Coordinates along the route:\n";
+            coordinates.forEach(function(coordinate) {
+                content += coordinate.lat() + ", " + coordinate.lng() + "\n";
+            });
+
+            // Create a blob with the content
+            var blob = new Blob([content], { type: 'text/plain' });
+
+            // Create a download link
+            var link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'route_coordinates.txt';
+
+            // Append the link to the body
+            document.body.appendChild(link);
+
+            // Programmatically click the link to trigger the download
+            link.click();
+
+            // Remove the link from the body
+            document.body.removeChild(link);
+        }
+
+        // Example usage
+        var source = 'New York City';
+        var destination = 'Los Angeles';
+
+        getRouteCoordinates(source, destination, saveToFile);
+    </script>
+</head>
+<body>
+    <h1>Downloading the text file...</h1>
+</body>
+</html>

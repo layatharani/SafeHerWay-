@@ -1,0 +1,190 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/assets/images/favicon.png">
+    <title>Crime Hotspot</title>
+    <!-- Bootstrap Core CSS -->
+   
+    <!-- Custom CSS -->
+    
+    <!-- You can change the theme colors from here -->
+   
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+</head>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+    <!--<link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="module" src="./index.js"></script>-->
+	<style type="text/css">
+	/* Optional: Makes the sample page fill the window. */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#container {
+  height: 100%;
+  display: flex;
+}
+
+#sidebar {
+  flex-basis: 15rem;
+  flex-grow: 1;
+  padding: 1rem;
+  max-width: 30rem;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+#map {
+  flex-basis: 0;
+  flex-grow: 4;
+  height: 100%;
+}
+
+#directions-panel {
+  margin-top: 10px;
+}
+
+	</style>
+	<script language="javascript">
+	function initMap() {
+  const directionsService = new google.maps.DirectionsService();
+  const directionsRenderer = new google.maps.DirectionsRenderer();
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 6,
+    center: { lat: 41.85, lng: -87.65 },
+  });
+
+  directionsRenderer.setMap(map);
+  document.getElementById("submit").addEventListener("click", () => {
+    calculateAndDisplayRoute(directionsService, directionsRenderer);
+  });
+}
+
+function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+  const waypts = [];
+  const checkboxArray = document.getElementById("waypoints");
+
+  for (let i = 0; i < checkboxArray.length; i++) {
+    if (checkboxArray.options[i].selected) {
+	
+	
+      waypts.push({
+        location: checkboxArray[i].value,
+        stopover: true,
+      });
+    }
+  }
+
+  directionsService
+    .route({
+      origin: document.getElementById("start").value,
+      destination: document.getElementById("end").value,
+      waypoints: waypts,
+      optimizeWaypoints: true,
+      travelMode: google.maps.TravelMode.DRIVING,
+    })
+    .then((response) => {
+      directionsRenderer.setDirections(response);
+
+      const route = response.routes[0];
+      const summaryPanel = document.getElementById("directions-panel");
+
+      summaryPanel.innerHTML = "";
+
+      // For each route, display summary information.
+      for (let i = 0; i < route.legs.length; i++) {
+	  
+	 
+        const routeSegment = i + 1;
+
+        summaryPanel.innerHTML +=
+          "<b>Route Segment: " + routeSegment + "</b><br>";
+        summaryPanel.innerHTML += route.legs[i].start_address + " to ";
+        summaryPanel.innerHTML += route.legs[i].end_address + "<br>";
+        summaryPanel.innerHTML += route.legs[i].distance.text + "<br><br>";
+      }
+    })
+    .catch((e) => window.alert("Directions request failed due to " + status));
+}
+
+function customDirectionsRenderer(response, status) {
+  if (status == google.maps.DirectionsStatus.OK) {
+  directionsDisplay.setDirections(response);
+    var bounds = new google.maps.LatLngBounds();
+    var route = response.routes[0];
+    var path = response.routes[0].overview_path;
+    var legs = response.routes[0].legs;
+    for (i = 0; i < legs.length; i++) {
+      var polyline = new google.maps.Polyline({map:map, strokeColor: "blue", path:[]})
+      if (i == 1) {
+        polyline.setOptions({strokeColor: "red"});
+        }
+      var steps = legs[i].steps;
+      for (j = 0; j < steps.length; j++) {
+        var nextSegment = steps[j].path;
+        for (k = 0; k < nextSegment.length; k++) {
+          polyline.getPath().push(nextSegment[k]);
+          bounds.extend(nextSegment[k]);
+        }
+      }
+    }
+
+    polyline.setMap(map);
+    map.fitBounds(bounds);
+  }
+};
+
+window.initMap = initMap;
+	</script>
+  </head>
+  <body>
+  
+	<form name="form1" method="post">
+
+							   <div id="container">
+      <div id="map"></div>
+      <div id="sidebar">
+        <div>
+		<input type="text" id="start">
+		<input type="text" id="waypoints">
+		<input type="text" id="end">
+		
+		
+          <input type="submit" id="submit" />
+        </div>
+        <div id="directions-panel"></div>
+    
+  </div>
+  </div>
+  </form>
+    <!-- 
+      The `defer` attribute causes the callback to execute after the full HTML
+      document has been parsed. For non-blocking uses, avoiding race conditions,
+      and consistent behavior across browsers, consider loading using Promises.
+      See https://developers.google.com/maps/documentation/javascript/load-maps-js-api
+      for more information.
+      -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVktjjBzkWVn7sAO55StbkXS3L1cx-vjI&callback=initMap&v=weekly"
+      defer
+    ></script>
+  </body>
+</html>

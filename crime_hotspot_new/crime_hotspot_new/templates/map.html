@@ -1,0 +1,205 @@
+<html>
+<head>
+  
+  <title>Google Maps Multiple Markers</title>
+  <!--<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>-->
+  <script type="text/javascript"
+      src="http://maps.google.com/maps/api/js?sensor=false&key=AIzaSyAzfJHU7mKkVKW9nTVPymNY-0emhlP-0DQ&v=3.21.5a&libraries=drawing&signed_in=true&libraries=places,drawing"></script>
+</head>
+<body>
+
+  <div id="map" style="height: 800px; width: 800px;">
+</div>
+<script type="text/javascript">
+
+    var locations = [
+		{% for rs in data %}
+		
+      ['{{rs[0]}} {{rs[3]}}, {{rs[4]}}', {{rs[1]}}, {{rs[2]}}, 4],
+	  	
+		{% endfor %}
+      /*['Coogee Beach', -33.923036, 151.259052, 5],
+      ['Cronulla Beach', -34.028249, 151.157507, 3],
+      ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
+      ['Maroubra Beach', -33.950198, 151.259302, 1]*/
+    ];
+	
+	
+	var locations1 = [
+		{% for rs1 in data1 %}
+		
+      ['{{rs1[5]}} {{rs1[0]}} {{rs1[3]}}, {{rs1[4]}} <br>({{rs1[6]}})', {{rs1[1]}}, {{rs1[2]}}, 4],
+	  	
+		{% endfor %}
+      
+    ];
+	
+	var locations2 = [
+		{% for rs2 in data2 %}
+		
+      ['{{rs2[5]}} {{rs2[0]}} {{rs2[3]}}, {{rs2[4]}} <br>({{rs2[6]}})', {{rs2[1]}}, {{rs2[2]}}, 4],
+	  	
+		{% endfor %}
+      
+    ];
+	
+	var locations3 = [
+		{% for rs3 in data3 %}
+		
+      ['{{rs3[5]}} {{rs3[0]}} {{rs3[3]}}, {{rs3[4]}} <br>({{rs3[6]}})', {{rs3[1]}}, {{rs3[2]}}, 4],
+	  	
+		{% endfor %}
+      
+    ];
+	
+	var locations4 = [
+		{% for rs4 in data4 %}
+		
+      ['{{rs4[5]}} {{rs4[0]}} {{rs4[3]}}, {{rs4[4]}} <br>({{rs4[6]}})', {{rs4[1]}}, {{rs4[2]}}, 4],
+	  	
+		{% endfor %}
+      
+    ];
+	
+	var locations5 = [
+		{% for rs5 in data5 %}
+		
+      ['{{rs5[5]}} {{rs5[0]}} {{rs5[3]}}, {{rs5[4]}} <br>({{rs5[6]}})', {{rs5[1]}}, {{rs5[2]}}, 4],
+	  	
+		{% endfor %}
+      
+    ];
+	
+	var locations6 = [
+		{% for rs6 in data6 %}
+		
+      ['{{rs6[5]}} {{rs6[0]}} {{rs6[3]}}, {{rs6[4]}} <br>({{rs6[6]}})', {{rs6[1]}}, {{rs6[2]}}, 4],
+	  	
+		{% endfor %}
+      
+    ];
+	
+
+	
+	
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: new google.maps.LatLng({{latt}}, {{lonn}}),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) { 
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+//marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+	////////
+	//http://maps.google.com/mapfiles/ms/icons/blue-dot.png
+	
+	///////////////////////////////////////
+	 for (i = 0; i < locations1.length; i++) { 
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations1[i][1], locations1[i][2]),
+        map: map
+      });
+marker.setIcon('../static/assets/images/orange-dot.png');
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations1[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+	
+	 for (i = 0; i < locations2.length; i++) { 
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations2[i][1], locations2[i][2]),
+        map: map
+      });
+marker.setIcon('../static/assets/images/red-dot.png');
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations2[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+	
+	 for (i = 0; i < locations3.length; i++) { 
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations3[i][1], locations3[i][2]),
+        map: map
+      });
+marker.setIcon('../static/assets/images/pink-dot.png');
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations3[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+	///////////////////////////////////////
+	for (i = 0; i < locations4.length; i++) { 
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations4[i][1], locations4[i][2]),
+        map: map
+      });
+marker.setIcon('../static/assets/images/yellow-dot.png');
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations4[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+	
+	 for (i = 0; i < locations5.length; i++) { 
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations5[i][1], locations5[i][2]),
+        map: map
+      });
+marker.setIcon('../static/assets/images/blue-dot.png');
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations5[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+	
+	 for (i = 0; i < locations6.length; i++) { 
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations6[i][1], locations6[i][2]),
+        map: map
+      });
+marker.setIcon('../static/assets/images/brown-dot.png');
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations6[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+	///////////////////////////////////////
+	
+	
+	
+//////////////////////////////////////	
+	
+	
+  </script> 
+
+</body>
+</html>
