@@ -10,12 +10,12 @@ SafeHerWay: Crime Rate and Hotspot Prediction System for Women
 Project to develop reliable and accurate system for predicting crime hot spots in specific areas, focusing on crimes against women, using a popular Machine Learning algorithm.
 
 **Libraries Required:**
-Keras
-numpy
-pandas
-seaborn
-scikit learn
-Flask
+Keras,
+numpy,
+pandas,
+seaborn,
+scikit learn,
+Flask,
 mysql.connector
 
 **Procedure:**
